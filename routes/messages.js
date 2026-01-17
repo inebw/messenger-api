@@ -9,6 +9,6 @@ const messages = Router();
 
 messages.post("/:id/:friendId", sendMessage);
 messages.get("/:id/:friendId", getMessages);
-messages.delete("/:messageId", deleteMessage);
+messages.delete(":messageId", deleteMessage);
 
 module.exports = messages;

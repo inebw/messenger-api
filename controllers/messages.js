@@ -1,20 +1,21 @@
 const { prisma } = require("../lib/prisma");
 
-const getMessages = async (req, res) => {
-  const { id, friendId } = req.params;
+const getMessages = async (id, friendId) => {
   const messages = await prisma.message.findMany({
     where: {
-      senderId: parseInt(id),
-      receiverId: parseInt(friendId),
+      OR: [
+        { AND: [{ senderId: id }, { receiverId: friendId }] },
+        { AND: [{ senderId: friendId }, { receiverId: id }] },
+      ],
+    },
+    orderBy: {
+      id: "asc",
     },
   });
-  res.json(messages);
+  return messages;
 };
 
-const sendMessage = async (req, res) => {
-  const { id, friendId } = req.params;
-  const { message } = req.body;
-
+const sendMessage = async (id, friendId, message) => {
   await prisma.message.create({
     data: {
       message,
@@ -22,8 +23,6 @@ const sendMessage = async (req, res) => {
       receiverId: parseInt(friendId),
     },
   });
-
-  res.sendStatus(201);
 };
 
 const deleteMessage = async (req, res) => {
