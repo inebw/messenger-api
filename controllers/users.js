@@ -23,7 +23,13 @@ const toggleUserOffline = async (id) => {
   });
 };
 
+const getAllUsers = async (req, res) => {
+  const users = await prisma.user.findMany();
+  res.json(users);
+};
+
 module.exports = {
   toggleUserOffline,
   toggleUserOnline,
+  getAllUsers,
 };

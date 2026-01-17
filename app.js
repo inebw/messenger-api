@@ -10,7 +10,8 @@ const cors = require("cors");
 const friends = require("./routes/friends");
 const messages = require("./routes/messages");
 const { getMessages, sendMessage } = require("./controllers/messages");
-const { toggleUserOnline, toggleUserOffline } = require("./controllers/user");
+const { toggleUserOnline, toggleUserOffline } = require("./controllers/users");
+const users = require("./routes/users");
 
 const app = express();
 const port = process.env.PORT || 4000;
@@ -60,6 +61,7 @@ app.use("/login", login);
 app.use("/sign-up", signUp);
 app.use("/friends", friends);
 app.use("/messages", messages);
+app.use("/users", users);
 
 server.listen(port, (err) => {
   if (err) console.log(err);
