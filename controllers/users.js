@@ -28,8 +28,18 @@ const getAllUsers = async (req, res) => {
   res.json(users);
 };
 
+const logoutUser = async (req, res) => {
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: process.env.PROD ? true : false,
+    sameSite: process.env.PROD ? "none" : "lax",
+  });
+  res.sendStatus(204);
+};
+
 module.exports = {
   toggleUserOffline,
   toggleUserOnline,
   getAllUsers,
+  logoutUser,
 };
