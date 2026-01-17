@@ -9,7 +9,12 @@ login.get(
   "/protected",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    res.json({ msg: "This is the protected route:" });
+    res.json({
+      id: req.user.id,
+      username: req.user.username,
+      firstName: req.user.first_name,
+      lastName: req.user.last_name,
+    });
   },
 );
 

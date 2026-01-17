@@ -26,7 +26,6 @@ module.exports = [
           username: username,
         },
       });
-      console.log(user);
       if (!user) return res.status(401).json({ msg: "User not found" });
 
       const match = await bcrypt.compare(password, user.password);
@@ -41,7 +40,12 @@ module.exports = [
         secure: process.env.PROD ? true : false,
         sameSite: process.env.PROD ? "none" : "lax",
       });
-      res.json({ msg: "Logged in successfully" });
+      res.json({
+        id: user.id,
+        username: user.username,
+        firstName: user.first_name,
+        lastname: user.last_name,
+      });
     }
   },
 ];

@@ -2,13 +2,22 @@ const { prisma } = require("../lib/prisma");
 
 const getFriends = async (req, res) => {
   const { id } = req.params;
-  const friends = await prisma.user.findMany({
+  const friends = await prisma.user.findUnique({
     where: {
       id: parseInt(id),
     },
-    include: { friends: true },
+    include: {
+      friends: {
+        select: {
+          id: true,
+          first_name: true,
+          last_name: true,
+          username: true,
+        },
+      },
+    },
   });
-  res.json(friends);
+  res.json(friends.friends);
 };
 
 const addFriend = async (req, res) => {
