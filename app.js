@@ -34,9 +34,13 @@ const io = new Server(server, {
 require("./config/passport")(passport);
 
 io.on("connection", (socket) => {
+  socket.on("online", (data) => {
+    toggleUserOnline(data);
+    socket.data.id = data;
+  });
+
   socket.on("join_room", (data) => {
     socket.join(data);
-    toggleUserOnline(data);
     socket.data.id = data;
   });
 
@@ -45,8 +49,24 @@ io.on("connection", (socket) => {
       if (data.message) await sendMessage(data.id, data.friendId, data.message);
       const messages = await getMessages(data.id, data.friendId);
       socket.emit("getMessage", messages);
-      socket.to(data.friendId).emit("getMessage", messages);
+      socket.to(`${data.friendId}-${data.id}`).emit("getMessage", messages);
     } catch (err) {}
+  });
+
+  socket.on("getMyMessage", async (data) => {
+    try {
+      const messages = await getMessages(data.id, data.friendId);
+      socket.emit("getMessage", messages);
+    } catch (err) {
+      console.log(err);
+    }
+  });
+
+  socket.on("leave_room", (data) => {
+    console.log(socket.rooms);
+    socket.leave(data);
+    console.log("leaving room", data);
+    console.log(socket.rooms);
   });
 
   socket.on("disconnect", (data) => {
