@@ -14,6 +14,8 @@ login.get(
       username: req.user.username,
       firstName: req.user.first_name,
       lastName: req.user.last_name,
+      fullName: `${req.user.first_name} ${req.user.last_name}`,
+      avatar: req.user.avatar,
     });
   },
 );

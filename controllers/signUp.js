@@ -28,6 +28,7 @@ const validateUser = [
     .withMessage("First Name should contain only alphabets")
     .isLength({ min: 3, max: 255 })
     .withMessage("Last Name should contain at least 3 characters"),
+  body("avatar").trim(),
   body("password")
     .trim()
     .isLength({ min: 8, max: 255 })
@@ -46,7 +47,8 @@ module.exports = [
   async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) return res.status(400).json(errors.array());
-    const { username, firstName, lastName, password } = matchedData(req);
+    const { username, firstName, lastName, password, avatar } =
+      matchedData(req);
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await prisma.user.create({
       data: {
@@ -54,6 +56,7 @@ module.exports = [
         first_name: firstName,
         last_name: lastName,
         password: hashedPassword,
+        avatar: `https://robohash.org/${username}${firstName}${lastName}.png?set=set${avatar}`,
       },
     });
     res.sendStatus(201);

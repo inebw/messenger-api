@@ -9,7 +9,7 @@ const getMessages = async (id, friendId) => {
       ],
     },
     orderBy: {
-      id: "asc",
+      id: "desc",
     },
   });
   return messages;

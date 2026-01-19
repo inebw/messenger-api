@@ -19,6 +19,7 @@ model User {
   first_name       String    @db.VarChar(255)
   last_name        String    @db.VarChar(255)
   password         String
+  avatar           String
   online           Boolean   @default(false)
   friends          User[]    @relation("userFriends")
   friendsOf        User[]    @relation("userFriends")

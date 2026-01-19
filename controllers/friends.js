@@ -13,6 +13,8 @@ const getFriends = async (req, res) => {
           first_name: true,
           last_name: true,
           username: true,
+          avatar: true,
+          online: true,
         },
       },
     },
