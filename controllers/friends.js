@@ -22,6 +22,27 @@ const getFriends = async (req, res) => {
   res.json(friends.friends);
 };
 
+getFriendsForSocket = async (id) => {
+  const friends = await prisma.user.findUnique({
+    where: {
+      id: parseInt(id),
+    },
+    include: {
+      friends: {
+        select: {
+          id: true,
+          first_name: true,
+          last_name: true,
+          username: true,
+          avatar: true,
+          online: true,
+        },
+      },
+    },
+  });
+  return friends.friends;
+};
+
 const addFriend = async (req, res) => {
   const { id, friendId } = req.params;
   await prisma.user.update({
@@ -60,4 +81,5 @@ module.exports = {
   getFriends,
   addFriend,
   removeFriend,
+  getFriendsForSocket,
 };

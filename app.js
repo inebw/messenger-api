@@ -12,6 +12,7 @@ const messages = require("./routes/messages");
 const { getMessages, sendMessage } = require("./controllers/messages");
 const { toggleUserOnline, toggleUserOffline } = require("./controllers/users");
 const users = require("./routes/users");
+const { getFriendsForSocket } = require("./controllers/friends");
 
 const app = express();
 const port = process.env.PORT || 4000;
@@ -37,6 +38,7 @@ io.on("connection", (socket) => {
   socket.on("online", (data) => {
     toggleUserOnline(data);
     socket.data.id = data;
+    socket.broadcast.emit("imOnline", "imonline");
   });
 
   socket.on("join_room", (data) => {
@@ -62,6 +64,15 @@ io.on("connection", (socket) => {
     }
   });
 
+  socket.on("postFriends", async (data) => {
+    try {
+      const friends = await getFriendsForSocket(data);
+      socket.emit("getFriends", friends);
+    } catch (err) {
+      console.log(err);
+    }
+  });
+
   socket.on("leave_room", (data) => {
     console.log(socket.rooms);
     socket.leave(data);
@@ -69,8 +80,9 @@ io.on("connection", (socket) => {
     console.log(socket.rooms);
   });
 
-  socket.on("disconnect", (data) => {
-    if (socket.data.id) toggleUserOffline(socket.data.id);
+  socket.on("disconnect", async (data) => {
+    if (socket.data.id) await toggleUserOffline(socket.data.id);
+    socket.broadcast.emit("imOffline", "imOffline");
   });
 });
 
