@@ -59,6 +59,6 @@ module.exports = [
         avatar: `https://robohash.org/${username}${firstName}${lastName}.png?set=set${avatar}`,
       },
     });
-    res.sendStatus(201);
+    res.json({ msg: "Account Created Sucessfully. Login to continue." });
   },
 ];

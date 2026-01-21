@@ -28,6 +28,21 @@ const getAllUsers = async (req, res) => {
   res.json(users);
 };
 
+const getUserInfo = async (req, res) => {
+  const { id } = req.params;
+  const user = await prisma.user.findUnique({
+    where: { id: parseInt(id) },
+  });
+  res.json({
+    id: user.id,
+    firstName: user.first_name,
+    lastName: user.last_name,
+    username: user.username,
+    online: user.online,
+    avatar: user.avatar,
+  });
+};
+
 const logoutUser = async (req, res) => {
   res.clearCookie("token", {
     httpOnly: true,
@@ -42,4 +57,5 @@ module.exports = {
   toggleUserOnline,
   getAllUsers,
   logoutUser,
+  getUserInfo,
 };
