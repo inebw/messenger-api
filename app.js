@@ -74,10 +74,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("leave_room", (data) => {
-    console.log(socket.rooms);
     socket.leave(data);
-    console.log("leaving room", data);
-    console.log(socket.rooms);
   });
 
   socket.on("disconnect", async (data) => {

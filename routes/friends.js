@@ -4,11 +4,23 @@ const {
   addFriend,
   removeFriend,
 } = require("../controllers/friends");
+const passport = require("passport");
 
 const friends = Router();
-
-friends.get("/:id", getFriends);
-friends.post("/:id/:friendId", addFriend);
-friends.delete("/:id/:friendId", removeFriend);
+friends.get(
+  "/:id",
+  passport.authenticate("jwt", { session: false }),
+  getFriends,
+);
+friends.post(
+  "/:id/:friendId",
+  passport.authenticate("jwt", { session: false }),
+  addFriend,
+);
+friends.delete(
+  "/:id/:friendId",
+  passport.authenticate("jwt", { session: false }),
+  removeFriend,
+);
 
 module.exports = friends;

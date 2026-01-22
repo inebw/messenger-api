@@ -4,11 +4,24 @@ const {
   getMessages,
   deleteMessage,
 } = require("../controllers/messages");
+const passport = require("passport");
 
 const messages = Router();
 
-messages.post("/:id/:friendId", sendMessage);
-messages.get("/:id/:friendId", getMessages);
-messages.delete(":messageId", deleteMessage);
+messages.post(
+  "/:id/:friendId",
+  passport.authenticate("jwt", { session: false }),
+  sendMessage,
+);
+messages.get(
+  "/:id/:friendId",
+  passport.authenticate("jwt", { session: false }),
+  getMessages,
+);
+messages.delete(
+  ":messageId",
+  passport.authenticate("jwt", { session: false }),
+  deleteMessage,
+);
 
 module.exports = messages;

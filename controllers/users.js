@@ -1,7 +1,6 @@
 const { prisma } = require("../lib/prisma");
 
 const toggleUserOnline = async (id) => {
-  console.log(id);
   await prisma.user.update({
     where: {
       id: parseInt(id),
@@ -24,7 +23,16 @@ const toggleUserOffline = async (id) => {
 };
 
 const getAllUsers = async (req, res) => {
-  const users = await prisma.user.findMany();
+  const users = await prisma.user.findMany({
+    select: {
+      id: true,
+      username: true,
+      first_name: true,
+      last_name: true,
+      avatar: true,
+      online: true,
+    },
+  });
   res.json(users);
 };
 
